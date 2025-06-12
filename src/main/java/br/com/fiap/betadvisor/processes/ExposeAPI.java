@@ -20,12 +20,12 @@ public class ExposeAPI{
     public void exposeAPI(@RequestBody Bet a){
         try {
             HttpHeaders headers = new HttpHeaders();
-            headers.set("x-api-key", "");
+            headers.set("x-api-key", "yRNe6BTHYI9C3FzxHM9jrLX43SVrSN62knm79Wze");
             headers.setContentType(MediaType.APPLICATION_JSON);
 
             String json = mapper.writeValueAsString(a);
             HttpEntity<String> entity = new HttpEntity<>(json, headers);
-            String apiGatewayUrl = "";
+            String apiGatewayUrl = "https://3uhhkxjcp4.execute-api.us-east-1.amazonaws.com/dev/cloud-it/";
 
             ResponseEntity<String> response = restTemplate.postForEntity(apiGatewayUrl, entity, String.class);
 

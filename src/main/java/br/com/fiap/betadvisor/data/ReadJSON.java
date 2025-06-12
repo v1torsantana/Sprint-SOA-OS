@@ -18,8 +18,8 @@ import java.util.List;
 public class ReadJSON {
     private final ObjectMapper mapper = new ObjectMapper();
     private final RestTemplate restTemplate = new RestTemplate();
-    private final String apiGatewayUrl = "";
-    private final String apiKey = "";
+    private final String apiGatewayUrl = "https://3uhhkxjcp4.execute-api.us-east-1.amazonaws.com/dev/cloud-it/";
+    private final String apiKey = "yRNe6BTHYI9C3FzxHM9jrLX43SVrSN62knm79Wze";
     private final ExposeAPI exposeAPI;
 
     public ReadJSON(ExposeAPI exposeAPI) {
@@ -40,6 +40,7 @@ public class ReadJSON {
                 exposeAPI.exposeAPI(bet);
             }
 
+            mapper.writeValue(file, "");
             return "Apostas enviadas com sucesso.";
 
         } catch (Exception e) {

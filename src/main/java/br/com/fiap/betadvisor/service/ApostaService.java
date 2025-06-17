@@ -18,7 +18,6 @@ public class ApostaService {
     }
 
     public Aposta findById(Long id) {
-        // Troca RuntimeException pela nossa exceção específica
         return apostaRepository.findById(id)
                 .orElseThrow(() -> new ApostaNotFoundException("Aposta não encontrada com id: " + id));
     }
@@ -32,7 +31,6 @@ public class ApostaService {
         if (id == null) {
             throw new IllegalArgumentException("Para atualizar, o 'id' da aposta deve ser fornecido.");
         }
-        // Nenhuma mudança aqui, pois ele já usa o findById() que acabamos de melhorar
         Aposta apostaExistente = this.findById(id);
 
         apostaExistente.setTime(apostaComNovosDados.getTime());
@@ -43,7 +41,6 @@ public class ApostaService {
     }
 
     public void deleteById(Long id) {
-        // Podemos usar o findById() aqui também para reutilizar a lógica e a exceção
         Aposta apostaParaDeletar = this.findById(id);
         apostaRepository.delete(apostaParaDeletar);
     }

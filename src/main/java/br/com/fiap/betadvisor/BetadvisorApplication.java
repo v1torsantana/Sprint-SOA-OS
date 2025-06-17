@@ -9,6 +9,7 @@ public class BetadvisorApplication {
 	public static void main(String[] args) {
 		SpringApplication.run(BetadvisorApplication.class, args);
 
+
 		}
 
 }

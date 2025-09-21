@@ -1,6 +1,7 @@
 package br.com.fiap.betadvisor.service;
 
 import br.com.fiap.betadvisor.Aposta;
+import br.com.fiap.betadvisor.dto.ApostaRequestDTO;
 import br.com.fiap.betadvisor.exception.ApostaNotFoundException; // Importe a nova exceção
 import br.com.fiap.betadvisor.repository.ApostaRepository;
 import lombok.RequiredArgsConstructor;
@@ -22,20 +23,21 @@ public class ApostaService {
                 .orElseThrow(() -> new ApostaNotFoundException("Aposta não encontrada com id: " + id));
     }
 
-    public Aposta save(Aposta aposta) {
-        return apostaRepository.save(aposta);
+    public Aposta save(ApostaRequestDTO apostaDTO) {
+        Aposta novaAposta = new Aposta();
+        novaAposta.setTime(apostaDTO.getTime());
+        novaAposta.setValorAposta(apostaDTO.getValorAposta());
+        novaAposta.setOdd(apostaDTO.getOdd());
+
+        return apostaRepository.save(novaAposta);
     }
 
-    public Aposta update(Aposta apostaComNovosDados) {
-        Long id = apostaComNovosDados.getId();
-        if (id == null) {
-            throw new IllegalArgumentException("Para atualizar, o 'id' da aposta deve ser fornecido.");
-        }
+    public Aposta update(Long id, ApostaRequestDTO apostaDTO) {
         Aposta apostaExistente = this.findById(id);
 
-        apostaExistente.setTime(apostaComNovosDados.getTime());
-        apostaExistente.setValorAposta(apostaComNovosDados.getValorAposta());
-        apostaExistente.setOdd(apostaComNovosDados.getOdd());
+        apostaExistente.setTime(apostaDTO.getTime());
+        apostaExistente.setValorAposta(apostaDTO.getValorAposta());
+        apostaExistente.setOdd(apostaDTO.getOdd());
 
         return apostaRepository.save(apostaExistente);
     }

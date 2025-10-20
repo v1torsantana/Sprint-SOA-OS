@@ -111,3 +111,11 @@ Para executar todos os testes unitários e de integração, utilize o seguinte c
 
 # No Linux ou macOS
 ./mvnw clean test
+ ``` 
+
+## 👨‍💻 Autores
+
+- **João Saborido** - RM 98184
+- **Lucca Alexandre** - RM 99700
+- **Matheus Haruo** - RM 97663
+- **Victor Wittner** - RM 98667

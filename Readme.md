@@ -4,144 +4,110 @@
 
 Este projeto é uma aplicação de back-end desenvolvida com **Spring Boot** para a disciplina de Arquitetura Orientada a Serviços e Web Services. A aplicação implementa uma API RESTful completa para gerenciar um recurso de apostas (`Aposta`).
 
-A arquitetura do projeto segue o padrão de camadas (Controller, Service, Repository) para garantir a separação de responsabilidades, alta coesão e baixo acoplamento. A API inclui funcionalidades de CRUD (Create, Read, Update, Delete), validações de dados e tratamento de erros centralizado.
+A arquitetura do projeto segue o padrão de camadas (Controller, Service, Repository), utilizando interfaces para a camada de serviço para garantir a separação de responsabilidades e aderir aos princípios SOLID. A API é protegida com **Spring Security e JWT**, e toda a sua funcionalidade é documentada de forma interativa com **SpringDoc (Swagger)**.
 
-## Tecnologias Utilizadas
+## 🛠️ Tecnologias Utilizadas
 
-* **Linguagem de Programação:** Java
-* **Framework:** Spring Boot 3.x
+* **Linguagem:** Java 17
+* **Framework:** Spring Boot 3.3.0
 * **Gerenciador de Dependências:** Maven
-* **Banco de Dados:** Oracle (ou outro, dependendo da sua configuração)
+* **Banco de Dados:** Oracle (ambiente FIAP)
 * **ORM:** Spring Data JPA / Hibernate
-* **Validação de Dados:** Jakarta Validation (com a biblioteca `spring-boot-starter-validation`)
-* **Lombok:** Para reduzir a verbosidade do código (getters, setters, construtores).
-* **Ferramentas de Teste da API:** Postman / Insomnia
+* **Segurança:** Spring Security, JSON Web Token (JWT) com a biblioteca `java-jwt` da Auth0
+* **Documentação:** SpringDoc (Swagger/OpenAPI)
+* **Testes:** JUnit 5, Mockito & Spring Test (MockMvc)
+* **Validação:** Jakarta Validation
+* **Utilitários:** Lombok
 
 ## Estrutura do Projeto
 
 O projeto é organizado em pacotes que representam as camadas da arquitetura:
 
-* **`br.com.fiap.betadvisor.controller`**: Contém o `ApostaController`, responsável por receber as requisições HTTP e retornar as respostas.
-* **`br.com.fiap.betadvisor.service`**: Contém o `ApostaService`, onde a lógica de negócio é implementada.
-* **`br.com.fiap.betadvisor.repository`**: Contém o `ApostaRepository`, que interage com o banco de dados usando Spring Data JPA.
-* **`br.com.fiap.betadvisor.dto`**: Contém os DTOs (`ApostaRequestDTO` e `ApostaResponseDTO`), que são objetos de transferência de dados para padronizar as requisições e respostas.
-* **`br.com.fiap.betadvisor.exception`**: Contém a exceção personalizada `ApostaNotFoundException` e o `GlobalExceptionHandler` para tratar erros globalmente.
+* `br.com.fiap.betadvisor.config`**: Contém as configurações de segurança (`SecurityConfig`) e o filtro JWT (`SecurityFilter`).
+* `br.com.fiap.betadvisor.controller`**: Responsável por expor os endpoints da API (`ApostaController`, `UsuarioController`).
+* `br.com.fiap.betadvisor.dto`**: Objetos de Transferência de Dados para as requisições e respostas.
+* `br.com.fiap.betadvisor.entity`**: Entidades JPA que modelam as tabelas do banco de dados (`Aposta`, `Usuario`).
+* `br.com.fiap.betadvisor.exception`**: Tratamento global de exceções.
+* `br.com.fiap.betadvisor.repository`**: Interfaces que estendem `JpaRepository` para a comunicação com o banco.
+* `br.com.fiap.betadvisor.service`**: Contém as interfaces e implementações da lógica de negócio (`ApostaService`, `TokenService`, `AuthenticationService`).
 
-## Como Configurar e Executar o Projeto
+## ⚙️ Como Executar a Aplicação
 
 **Pré-requisitos:**
-* JDK 17 ou superior
-* Maven 3.6+
-* Um banco de dados Oracle (ou outro, configurado no `application.properties`)
+* JDK 17
+* Acesso à rede da FIAP (via VPN, se necessário, pois o projeto aponta para o Oracle da instituição).
 
 1.  **Clone o repositório:**
-    ```sh
-    git clone <URL_DO_SEU_REPOSITORIO>
+    ```bash
+    git clone [https://github.com/v1torsantana/Sprint-SOA-OS.git](https://github.com/v1torsantana/Sprint-SOA-OS.git)
+    cd Sprint-SOA-OS
     ```
 
-2.  **Configurar o Banco de Dados:**
-    * Abra o arquivo `src/main/resources/application.properties`.
-    * Preencha as informações de conexão do seu banco de dados:
-        ```properties
-        spring.datasource.url=<SUA_URL>
-        spring.datasource.username=<SEU_USUARIO>
-        spring.datasource.password=<SUA_SENHA>
-        ```
-    * (Se você não usou Flyway) Certifique-se de que a propriedade `spring.jpa.hibernate.ddl-auto` está configurada como `update` para que o Hibernate crie a tabela automaticamente.
+2.  **Execute a aplicação com o Maven Wrapper:**
+    O uso do Maven Wrapper (`mvnw`) é recomendado para garantir a consistência do ambiente de build.
+    ```bash
+    # No Windows (CMD ou PowerShell)
+    ./mvnw.cmd spring-boot:run
 
-3.  **Executar a aplicação:**
-    * No terminal, navegue até a pasta raiz do projeto.
-    * Execute a aplicação com o Maven:
-        ```sh
-        ./mvnw spring-boot:run
-        ```
-    * A aplicação estará disponível em `http://localhost:8080`.
+    # No Linux ou macOS
+    ./mvnw spring-boot:run
+    ```
+    A aplicação estará disponível em `http://localhost:8080`.
 
-## Exemplos de Requisições da API
+## 📖 Acessando a Documentação da API (Swagger)
 
-Utilize uma ferramenta como o Postman ou Insomnia para testar os endpoints.
+Com a aplicação em execução, acesse a documentação interativa do Swagger no seu navegador. É a forma mais fácil de testar a API.
 
-### **1. Criar uma Aposta (POST)**
+**[http://localhost:8080/swagger-ui.html](http://localhost:8080/swagger-ui.html)**
 
-* **URL:** `http://localhost:8080/api/apostas`
-* **Método:** `POST`
+## 🧪 Testando a API (Fluxo com Autenticação)
+
+Os endpoints de apostas estão protegidos. Para acessá-los, siga o fluxo abaixo (pode ser feito pelo Swagger ou Postman).
+
+#### 1. Registrar um Usuário
+
+* **Endpoint:** `POST /api/usuarios/registrar`
 * **Body (JSON):**
     ```json
     {
-        "time": "Flamengo",
-        "valorAposta": 50.00,
-        "odd": 1.55
+      "login": "fiap_user",
+      "senha": "password123"
     }
     ```
-* **Resposta Esperada (Status 201 Created):**
-    ```json
-    {
-        "id": 1,
-        "time": "Flamengo",
-        "valorAposta": 50.0,
-        "odd": 1.55,
-        "dataAposta": "2025-09-21T10:00:00.000+00:00"
-    }
-    ```
+* **Resposta:** `200 OK`
 
-### **2. Consultar Todas as Apostas (GET)**
+#### 2. Fazer Login para Obter um Token
 
-* **URL:** `http://localhost:8080/api/apostas`
-* **Método:** `GET`
-* **Resposta Esperada (Status 200 OK):**
-    ```json
-    [
-        {
-            "id": 1,
-            "time": "Flamengo",
-            "valorAposta": 50.0,
-            "odd": 1.55,
-            "dataAposta": "2025-09-21T10:00:00.000+00:00"
-        }
-    ]
-    ```
-
-### **3. Consultar uma Aposta por ID (GET)**
-
-* **URL:** `http://localhost:8080/api/apostas/1`
-* **Método:** `GET`
-* **Resposta Esperada (Status 200 OK):**
-    ```json
-    {
-        "id": 1,
-        "time": "Flamengo",
-        "valorAposta": 50.0,
-        "odd": 1.55,
-        "dataAposta": "2025-09-21T10:00:00.000+00:00"
-    }
-    ```
-
-### **4. Atualizar uma Aposta (PUT)**
-
-* **URL:** `http://localhost:8080/api/apostas/1`
-* **Método:** `PUT`
+* **Endpoint:** `POST /api/usuarios/login`
 * **Body (JSON):**
     ```json
     {
-        "time": "Vasco",
-        "valorAposta": 60.00,
-        "odd": 1.80
+      "login": "fiap_user",
+      "senha": "password123"
     }
     ```
-* **Resposta Esperada (Status 200 OK):**
+* **Resposta (200 OK):**
     ```json
     {
-        "id": 1,
-        "time": "Vasco",
-        "valorAposta": 60.0,
-        "odd": 1.80,
-        "dataAposta": "2025-09-21T10:00:00.000+00:00"
+      "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJCZXRBZHZpc29yIEFQSSIsInN1YiI6ImZpYXBfdXNlciIsImV4cCI6MTc2MDk5OTk5OX0.TOKEN_EXEMPLO"
     }
     ```
+**➡️ Copie o valor do token gerado.**
 
-### **5. Deletar uma Aposta (DELETE)**
+#### 3. Acessar um Endpoint Protegido
 
-* **URL:** `http://localhost:8080/api/apostas/1`
-* **Método:** `DELETE`
-* **Resposta Esperada (Status 204 No Content):**
-    * Não há corpo de resposta.
+* **Endpoint:** `GET /api/apostas`
+* **Autenticação:** Na sua ferramenta de teste (Postman ou Swagger), adicione um cabeçalho `Authorization` com o valor `Bearer SEU_TOKEN_COPIADO_AQUI`.
+    * No Swagger, clique no botão "Authorize" no canto superior direito e cole o token lá.
+* **Resposta (200 OK):** Uma lista com as apostas cadastradas.
+
+## 🏃 Como Rodar os Testes Automatizados
+
+Para executar todos os testes unitários e de integração, utilize o seguinte comando na raiz do projeto:
+
+```bash
+# No Windows
+./mvnw.cmd clean test
+
+# No Linux ou macOS
+./mvnw clean test
